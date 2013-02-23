@@ -44,13 +44,15 @@ header('Content-type: application/json');
 $q = '*:*';
 $jsonp = false;
 $jsonp_before = '';
+$jsonp_after = '';
 if (isset($_GET['q']) && !empty($_GET['q'])) {
 	$q = $_GET['q'];
 }
 if (isset($_GET['callback']) && !empty($_GET['callback'])) {
 	$jsonp = true;
-	$jsonp_before = $_GET['callback'];
+	$jsonp_before = $_GET['callback'] . '(';
+	$jsonp_after = ')';
 }
-echo $jsonp_before.do_request($es_url, 'POST', $q);
+echo $jsonp_before . do_request($es_url, 'POST', $q) . $jsonp_after ;
 
 ?>
