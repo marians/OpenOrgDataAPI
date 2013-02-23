@@ -1,8 +1,8 @@
 <?php
 
-$es_url = 'http://127.0.0.1:9200/orgdata/organisations/_search';
+error_reporting(0);
 
-echo "Hello World";
+$es_url = 'http://127.0.0.1:9200/orgdata/organisations/_search';
 
 function do_request($url, $method, $data) {
 	$ch = curl_init($url);
@@ -14,6 +14,6 @@ function do_request($url, $method, $data) {
 	return $response;
 }
 
-echo do_request($es_url);
+echo do_request($es_url, 'POST', '');
 
 ?>
