@@ -15,11 +15,11 @@ function do_request($url, $method, $query) {
 			)
 		)
 	);
-	$params = array(
-		'query' => array('query_string' => array(
-			'query' => $query
-		))
-	);
+	//$params = array(
+	//	'query' => array('query_string' => array(
+	//		'query' => $query
+	//	))
+	//);
 	$params_json = json_encode($params);
 	print $params_json;
 	$ch = curl_init($url);
