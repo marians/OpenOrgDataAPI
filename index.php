@@ -13,7 +13,9 @@ function do_request($url, $method, $query) {
 		),
 		'facets' => array(
 			'states' => array(
-				'terms' => array('field' => 'state')
+				'string' => array(
+					'field' => 'state'
+				)
 			),
 			'nameterms' => array(
 				'terms' => array(
