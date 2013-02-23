@@ -1,4 +1,4 @@
-#!/usr/local/python/2.6/bin/python
+#!/var/www/openorgdata.sendung.de/venv/bin/python
 
 # encoding: utf-8
 
