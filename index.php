@@ -15,7 +15,13 @@ function do_request($url, $method, $query) {
 			)
 		)
 	);
+	$params = array(
+		'query' => array('query_string' => array(
+			'query' => $query
+		))
+	);
 	$params_json = json_encode($params);
+	print $params_json;
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $params_json);
@@ -25,6 +31,6 @@ function do_request($url, $method, $query) {
 	return $response;
 }
 
-echo do_request($es_url, 'POST', '');
+echo do_request($es_url, 'POST', 'sport');
 
 ?>
