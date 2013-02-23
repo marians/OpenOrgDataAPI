@@ -14,6 +14,9 @@ function do_request($url, $method, $query) {
 		'facets' => array(
 			'states' => array(
 				'terms' => array('field' => 'state')
+			),
+			'terms' => array(
+				'terms' => array('field' => 'name')
 			)
 		)
 	);
@@ -34,6 +37,10 @@ function do_request($url, $method, $query) {
 }
 
 header('Content-type: application/json');
-echo do_request($es_url, 'POST', 'sport');
+$q = '';
+if (isset($_GET['q'])) {
+	$q = $_GET['q'];
+}
+echo do_request($es_url, 'POST', $q);
 
 ?>
