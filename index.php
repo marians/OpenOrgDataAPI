@@ -16,7 +16,11 @@ function do_request($url, $method, $query) {
 				'terms' => array('field' => 'state')
 			),
 			'nameterms' => array(
-				'terms' => array('field' => 'name')
+				'terms' => array(
+					'field' => 'name',
+					'size' => 100,
+					'order' => 'count'
+				)
 			)
 		)
 	);
