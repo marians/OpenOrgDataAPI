@@ -6,9 +6,12 @@ $es_url = 'http://127.0.0.1:9200/orgdata/organisation/_search';
 
 function do_request($url, $method, $query) {
 	$params = array(
-		'query' => array("query_string" => array(
-			"query" => $query
-		)),
+		'query' => array(
+			'query_string' => array(
+				'query' => $query
+			),
+			'size' => '0'
+		),
 		'facets' => array(
 			'states' => array(
 				'terms' => array('field' => 'state')
