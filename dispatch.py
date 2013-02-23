@@ -22,5 +22,5 @@ def hello_world(foo):
     return 'Hallo %s' % foo
 
 if __name__ == '__main__':
-    WSGIServer(app, bindAddress='/tmp/openorgdata-fcgidsock').run(host='0.0.0.0')
+    WSGIServer(app, bindAddress='/tmp/openorgdata-fcgidsock').run()
     #WSGIServer(app).run()
