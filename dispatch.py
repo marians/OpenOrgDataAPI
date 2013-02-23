@@ -1,3 +1,6 @@
+#!/usr/local/python/2.6/bin/python
+
+# encoding: utf-8
 
 from flask import Flask
 app = Flask(__name__)
