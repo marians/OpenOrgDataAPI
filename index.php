@@ -13,7 +13,7 @@ function do_request($url, $method, $query) {
 		),
 		'facets' => array(
 			'states' => array(
-				'string' => array(
+				'terms' => array(
 					'field' => 'state',
 					'size' => 20
 				)
