@@ -14,6 +14,9 @@ function do_request($url, $method, $query) {
 		'facets' => array(
 			'states' => array(
 				'terms' => array('field' => 'state')
+			),
+			'nameterms' => array(
+				'terms' => array('field' => 'name')
 			)
 		)
 	);
@@ -34,7 +37,7 @@ function do_request($url, $method, $query) {
 }
 
 header('Content-type: application/json');
-$q = '';
+$q = '*:*';
 if (isset($_GET['q'])) {
 	$q = $_GET['q'];
 }
