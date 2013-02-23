@@ -18,7 +18,7 @@ function do_request($url, $method, $query) {
 			'nameterms' => array(
 				'terms' => array(
 					'field' => 'name',
-					'size' => 100,
+					'size' => 30,
 					'order' => 'count'
 				)
 			)
@@ -42,9 +42,15 @@ function do_request($url, $method, $query) {
 
 header('Content-type: application/json');
 $q = '*:*';
-if (isset($_GET['q'])) {
+$jsonp = false;
+$jsonp_before = '';
+if (isset($_GET['q']) && !empty($_GET['q'])) {
 	$q = $_GET['q'];
 }
-echo do_request($es_url, 'POST', $q);
+if (isset($_GET['callback']) && !empty($_GET['callback'])) {
+	$jsonp = true;
+	$jsonp_before = $_GET['callback'];
+}
+echo $jsonp_before.do_request($es_url, 'POST', $q);
 
 ?>
