@@ -15,7 +15,7 @@ function do_request($url, $method, $query) {
 			'states' => array(
 				'terms' => array('field' => 'state')
 			),
-			'terms' => array(
+			'name_terms' => array(
 				'terms' => array('field' => 'name')
 			)
 		)
