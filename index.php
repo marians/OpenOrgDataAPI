@@ -2,15 +2,14 @@
 
 error_reporting(0);
 
-$es_url = 'http://127.0.0.1:9200/orgdata/organisation/_search';
+$es_url = 'http://127.0.0.1:9200/orgdata/organisation/_search?size=0';
 
 function do_request($url, $method, $query) {
 	$params = array(
 		'query' => array(
 			'query_string' => array(
 				'query' => $query
-			),
-			'size' => '0'
+			)
 		),
 		'facets' => array(
 			'states' => array(
