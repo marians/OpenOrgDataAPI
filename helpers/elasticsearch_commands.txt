@@ -62,7 +62,41 @@ curl -XPUT 'http://127.0.0.1:9200/orgdata/_settings' -d '
 curl -XPOST 'http://127.0.0.1:9200/orgdata/_open'
 
 
-# Set mapping for our one and only type "organisation"
+# Einfaches Mapping, das wenigstens funktioniert
+curl -XPUT 'http://127.0.0.1:9200/orgdata/organisation/_mapping' -d '
+{
+    "organisation": {
+        "_source": {"enabled": false},
+        "_type": {"index": "no"},
+        "_all": {"enabled": false},
+        "properties": {
+            "state": {
+                "type": "string",
+                "store": "no",
+                "index": "not_analyzed"
+            },
+            "court": {
+                "type": "string",
+                "store": "no",
+                "index": "not_analyzed"
+            },
+            "name": {
+                "type": "string",
+                "store": "no",
+                "analyzer": "simple"
+            },
+            "last_seen": {
+                "type": "string",
+                "store": "no",
+                "index": "no"
+            }
+        }
+    }
+}
+'
+
+
+# Set mapping for our one and only type "organisation" (funktioniertt nicht)
 #
 curl -XPUT 'http://127.0.0.1:9200/orgdata/organisation/_mapping' -d '
 {

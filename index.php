@@ -37,7 +37,7 @@ function do_request($url, $method, $query) {
 	$params = array(
 		'query' => array(
 			'query_string' => array(
-				'query' => $query
+				'query' => 'name:' . $query
 			)
 		),
 		'facets' => array(
