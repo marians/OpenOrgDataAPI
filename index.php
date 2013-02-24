@@ -50,7 +50,7 @@ function do_request($url, $method, $query) {
 			'nameterms' => array(
 				'terms' => array(
 					'field' => 'name',
-					'size' => 30,
+					'size' => 50,
 					'order' => 'count'
 				)
 			)
