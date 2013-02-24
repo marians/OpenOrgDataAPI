@@ -1,0 +1,105 @@
+
+# This is a little collection of used ElasticSearch commands
+# for fun and profit
+
+# Delete the complete f***ing index and start over
+#
+curl -XDELETE 'http://127.0.0.1:9200/orgdata/'
+
+# Create index from scratch
+#
+curl -XPUT 'http://127.0.0.1:9200/orgdata/'
+
+# Set the elasticsearch configuration
+#
+curl -XPUT 'http://127.0.0.1:9200/orgdata/_settings' -d '
+{
+    "index" : {
+        "refresh_interval": "60s"
+    }
+}'
+
+# Set the elasticsearch configuration
+#
+curl -XPOST 'http://127.0.0.1:9200/orgdata/_close'
+curl -XPUT 'http://127.0.0.1:9200/orgdata/_settings' -d '
+{
+    "settings" : {
+        "analysis" : {
+            "analyzer":{
+                "name_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "simple",
+                    "filter": [
+                        "min_length2_filter"
+                    ]
+                },
+                "name_substring_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "simple",
+                    "filter": [
+                        "min_length2_filter",
+                        "name_edge_ngram_filter"
+                    ]
+                }
+            },
+            "filter": {
+                "min_length2_filter": {
+                    "type": "length",
+                    "min": 2
+                },
+                "name_edge_ngram_filter": {
+                    "type": "edgeNGram",
+                    "min_gram": 1,
+                    "max_gram": 15,
+                    "side": "front"
+                }
+            }
+        }
+    }
+}
+'
+curl -XPOST 'http://127.0.0.1:9200/orgdata/_open'
+
+
+# Set mapping for our one and only type "organisation"
+#
+curl -XPUT 'http://127.0.0.1:9200/orgdata/organisation/_mapping' -d '
+{
+    "organisation": {
+        "_source": {"enabled": false},
+        "_type": {"index": "no"},
+        "_all": {"enabled": false},
+        "properties": {
+            "state": {
+                "type": "string",
+                "store": "no",
+                "index": "not_analyzed"
+            },
+            "court": {
+                "type": "string",
+                "store": "no",
+                "index": "not_analyzed"
+            },
+            "name": {
+                "type": "string",
+                "store": "no",
+                "analyzer": "name_analyzer"
+            },
+            "name_substring": {
+                "type": "string",
+                "store": "no",
+                "analyzer": "name_substring_analyzer"
+            },
+            "last_seen": {
+                "store": "no",
+                "index": "no"
+            }
+        }
+    }
+}
+'
+
+# Optimize index
+#
+curl -XPOST 'http://localhost:9200/orgdata/_optimize?max_num_segments=5'
