@@ -67,6 +67,7 @@ function do_request($url, $method, $query) {
 }
 
 header('Content-type: application/json');
+header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + (60 * 60 * 24)));
 $q = '*:*';
 $jsonp = false;
 $jsonp_before = '';
