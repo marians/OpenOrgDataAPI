@@ -130,13 +130,17 @@ if (isset($_GET['callback']) && !empty($_GET['callback'])) {
 	$jsonp_after = ')';
 }
 
+// get ElasticSearch response
 $json_data = do_request($es_url, $q);
+
+// cleanup response
 $data = json_decode($json_data);
 unset($data->_shards);
-unset($data->hits->hits);
+$data->hits = $data->hits->total;
 unset($data->facets->states->_type);
 unset($data->facets->states->other);
 
+// work in relative figures into the state facet
 $maxDensity = 0.0;
 $minDensity = 1.0;
 for ($i=0; $i<count($data->facets->states->terms); $i++) {
@@ -147,10 +151,10 @@ for ($i=0; $i<count($data->facets->states->terms); $i++) {
 	$maxDensity = max($maxDensity, $dens);
 	$minDensity = min($minDensity, $dens);
 }
-
 $data->facets->states->density_min = $minDensity;
 $data->facets->states->density_max = $maxDensity;
 
+// re-encode to JSON and output
 $json_data = json_encode($data);
 echo $jsonp_before . $json_data . $jsonp_after;
 
