@@ -137,3 +137,4 @@ curl -XPUT 'http://127.0.0.1:9200/orgdata/organisation/_mapping' -d '
 # Optimize index
 #
 curl -XPOST 'http://localhost:9200/orgdata/_optimize?max_num_segments=5'
+
