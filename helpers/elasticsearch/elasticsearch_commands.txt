@@ -8,11 +8,11 @@ curl -XDELETE 'http://127.0.0.1:9200/orgdata/'
 
 # Create index from scratch
 #
-curl -XPUT 'http://127.0.0.1:9200/orgdata/'
+curl -XPUT 'http://127.0.0.1:9200/orgdata20130302/'
 
 # Set the elasticsearch configuration
 #
-curl -XPUT 'http://127.0.0.1:9200/orgdata/_settings' -d '
+curl -XPUT 'http://127.0.0.1:9200/orgdata20130302/_settings' -d '
 {
     "index" : {
         "refresh_interval": "60s"
@@ -63,7 +63,7 @@ curl -XPOST 'http://127.0.0.1:9200/orgdata/_open'
 
 
 # Einfaches Mapping, das wenigstens funktioniert
-curl -XPUT 'http://127.0.0.1:9200/orgdata/organisation/_mapping' -d '
+curl -XPUT 'http://127.0.0.1:9200/orgdata20130302/organisation/_mapping' -d '
 {
     "organisation": {
         "_source": {"enabled": false},
@@ -71,6 +71,11 @@ curl -XPUT 'http://127.0.0.1:9200/orgdata/organisation/_mapping' -d '
         "_all": {"enabled": false},
         "properties": {
             "state": {
+                "type": "string",
+                "store": "no",
+                "index": "not_analyzed"
+            },
+            "county": {
                 "type": "string",
                 "store": "no",
                 "index": "not_analyzed"
@@ -136,5 +141,5 @@ curl -XPUT 'http://127.0.0.1:9200/orgdata/organisation/_mapping' -d '
 
 # Optimize index
 #
-curl -XPOST 'http://localhost:9200/orgdata/_optimize?max_num_segments=5'
+curl -XPOST 'http://localhost:9200/orgdata20130302/_optimize?max_num_segments=5'
 
