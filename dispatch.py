@@ -59,9 +59,8 @@ def hello_world():
 
     # TODO: mime type
     # TODO: expires header
-    return 'Hallo <br> <code>%s</code> <br> <code>%s</code>' % (
-        json.dumps(resultset.facets.nameterms),
-        json.dumps(resultset.facets.states)
+    return 'Hallo <br> <code>%s</code>' % (
+        json.dumps(result, indent=2)
     )
 
 
