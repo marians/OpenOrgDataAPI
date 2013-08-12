@@ -92,7 +92,6 @@ def uncached_search(query_term):
 
 def do_search(query_term):
     key = 'openorgdata.states.numitems'
-    mc.delete(key)
     cache = mc.get(key)
     if cache is None:
         states = uncached_state_facet_search()
@@ -103,7 +102,6 @@ def do_search(query_term):
     result = uncached_search(query_term)
     # merge with cache
     for n in range(len(result['facets']['states']['terms'])):
-        #print n, result['facets']['states']['terms'][n]
         name = result['facets']['states']['terms'][n]['term'].encode('utf-8')
         result['facets']['states']['terms'][n]['all'] = cache[name]
         result['facets']['states']['terms'][n]['state_id'] = state_ids[name]
