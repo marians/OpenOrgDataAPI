@@ -68,7 +68,7 @@ def expires(f):
 
 
 def uncached_state_facet_search():
-    query = pyes.TermQuery('name', '*')
+    query = pyes.TermQuery('name', '')
     query = query.search()
     query.facet.add_term_facet(field='state', name='states', size=20)
     resultset = es.search(query=query)
