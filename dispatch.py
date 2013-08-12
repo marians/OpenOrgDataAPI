@@ -2,8 +2,12 @@
 
 from flask import Flask
 from flask import request
+from flask import make_response
 import pyes
 import json
+import time
+from datetime import datetime
+from functools import wraps
 
 app = Flask(__name__)
 app.debug = True
@@ -32,6 +36,31 @@ state_ids = {
 }
 
 
+def add_response_headers(headers={}):
+    """This decorator adds the headers passed in to the response"""
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            resp = make_response(f(*args, **kwargs))
+            h = resp.headers
+            for header, value in headers.items():
+                h[header] = value
+            return resp
+        return decorated_function
+    return decorator
+
+
+def expires(f):
+    """This decorator passes far future expires header"""
+    threedays = datetime.fromtimestamp(time.now() + (60 * 60 * 24 * 3))
+    datestring = threedays.strftime('%a, %d %m %Y %H:%M:%S GMT')
+    @wraps(f)
+    @add_response_headers({'Expires': datestring})
+    def decorated_function(*args, **kwargs):
+        return f(*args, **kwargs)
+    return decorated_function
+
+
 def do_search(query_term):
     query = pyes.TermQuery('name', query_term)
     query = query.search()
@@ -53,15 +82,15 @@ def home():
 
 
 @app.route('/api/')
+@expires
+@add_response_headers({'Content-type': 'application/json'})
 def hello_world():
     q = request.args.get('q', '*')
     result = do_search(q)
 
     # TODO: mime type
     # TODO: expires header
-    return 'Hallo <br> <code>%s</code>' % (
-        json.dumps(result, indent=2)
-    )
+    return json.dumps(result, indent=2)
 
 
 if __name__ == '__main__':
