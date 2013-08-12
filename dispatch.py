@@ -8,7 +8,7 @@ import json
 app = Flask(__name__)
 app.debug = True
 
-esconn = pyes.ES('127.0.0.1:9200')
+es = pyes.ES('127.0.0.1:9200')
 
 
 @app.route('/')
@@ -18,9 +18,10 @@ def home():
 
 @app.route('/api/')
 def hello_world():
-    print "hello_world"
     q = request.args.get('q', '')
-    return 'Hallo %s' % q
+    q = pyes.TermQuery('name', q)
+    results = es.search(query=q)
+    return 'Hallo %s' % json.dumps(results)
 
 
 if __name__ == '__main__':
