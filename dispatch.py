@@ -103,11 +103,11 @@ def do_search(query_term):
     result = uncached_search(query_term)
     # merge with cache
     for n in range(len(result['facets']['states']['terms'])):
-        result['facets']['states']['terms'][n]['all'] = cache[result['facets']['states']['terms']['term']]
-        result['facets']['states']['terms'][n]['state_id'] = state_ids[result['facets']['states']['terms']['term']]
+        result['facets']['states']['terms'][n]['all'] = cache[result['facets']['states']['terms'][n]['term']]
+        result['facets']['states']['terms'][n]['state_id'] = state_ids[result['facets']['states']['terms'][n]['term']]
         result['facets']['states']['terms'][n]['density'] = (
             result['facets']['states']['terms'][n]['count'] /
-            float(cache[result['facets']['states']['terms']['term']]))
+            float(cache[result['facets']['states']['terms'][n]['term']]))
     return result
 
 
