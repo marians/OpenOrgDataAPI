@@ -9,7 +9,6 @@ import time
 from datetime import datetime
 from functools import wraps
 import memcache
-import pickle
 
 app = Flask(__name__)
 app.debug = True
@@ -68,7 +67,7 @@ def expires(f):
 
 
 def uncached_state_facet_search():
-    query = pyes.WildcardQuery('name', '*')
+    query = pyes.MatchAllQuery()
     query = query.search()
     query.facet.add_term_facet(field='state', name='states', size=20)
     resultset = es.search(query=query)
@@ -76,7 +75,10 @@ def uncached_state_facet_search():
 
 
 def uncached_search(query_term):
-    query = pyes.WildcardQuery('name', query_term)
+    if query_term == '':
+        query = pyes.MatchAllQuery()
+    else:
+        query = pyes.WildcardQuery('name', query_term)
     query = query.search()
     query.facet.add_term_facet(field='state', name='states', size=20)
     query.facet.add_term_facet(field='name', name='nameterms', size=50, order='count')
