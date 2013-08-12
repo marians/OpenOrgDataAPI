@@ -92,8 +92,8 @@ def uncached_search(query_term):
 
 def do_search(query_term):
     key = 'openorgdata.states.numitems'
-    cache = None
-    if mc.get(key) is None:
+    cache = mc.get(key)
+    if cache is None:
         result = uncached_state_facet_search()
         cache = {}
         for state in result['states']['terms']:
