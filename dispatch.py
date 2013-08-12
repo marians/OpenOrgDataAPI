@@ -72,7 +72,7 @@ def uncached_state_facet_search():
     query = query.search()
     query.facet.add_term_facet(field='state', name='states', size=20)
     resultset = es.search(query=query)
-    return resultset.facets['states']['terms']
+    return resultset.facets
 
 
 def uncached_search(query_term):
