@@ -109,7 +109,7 @@ def do_search(query_term):
         result['facets']['states']['terms'][n]['state_id'] = state_ids[name]
         result['facets']['states']['terms'][n]['density'] = (
             result['facets']['states']['terms'][n]['count'] /
-            float(cache[result['facets']['states']['terms'][n]['term']]))
+            float(cache[name]))
     return result
 
 
