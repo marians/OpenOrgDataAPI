@@ -20,9 +20,11 @@ def home():
 @app.route('/api/')
 def hello_world():
     q = request.args.get('q', '')
-    q = pyes.TermQuery('name', q)
-    results = es.search(query=q)
-    return 'Hallo %s' % json.dumps(results)
+    query = pyes.TermQuery('name', q)
+    query.facet.add_term_facet('states', field='state', size=20)
+    query.facet.add_term_facet('nameterms', field='name', size=50, order='count')
+    resultset = es.search(query=query)
+    return 'Hallo %s' % json.dumps(resultset.facets.nameterms.terms)
 
 
 if __name__ == '__main__':
