@@ -101,13 +101,19 @@ def do_search(query_term):
         mc.set('openorgdata.states.numitems', cache)
     result = uncached_search(query_term)
     # merge with cache
+    min_dens = 1.0
+    max_dens = 0.0
     for n in range(len(result['facets']['states']['terms'])):
         name = result['facets']['states']['terms'][n]['term'].encode('utf-8')
         result['facets']['states']['terms'][n]['all'] = cache[name]
         result['facets']['states']['terms'][n]['state_id'] = state_ids[name]
-        result['facets']['states']['terms'][n]['density'] = (
-            result['facets']['states']['terms'][n]['count'] /
+        dens = (result['facets']['states']['terms'][n]['count'] /
             float(cache[name]))
+        result['facets']['states']['terms'][n]['density'] = dens
+        min_dens = min(min_dens, dens)
+        max_dens = max(max_dens, dens)
+    result['facets']['states']['density_min'] = min_dens
+    result['facets']['states']['density_max'] = max_dens
     return result
 
 
