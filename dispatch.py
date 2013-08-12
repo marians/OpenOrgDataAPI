@@ -9,6 +9,7 @@ app = Flask(__name__)
 app.debug = True
 
 es = pyes.ES('127.0.0.1:9200')
+es.default_indices = ['orgdata']
 
 
 @app.route('/')
