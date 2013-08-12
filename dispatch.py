@@ -97,6 +97,7 @@ def do_search(query_term):
         result = uncached_state_facet_search()
         cache = {}
         for state in result['states']['terms']:
+            print state
             cache[state['term']] = state['count']
         mc.set('openorgdata.states.numitems', cache)
     result = uncached_search(query_term)
