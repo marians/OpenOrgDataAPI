@@ -96,6 +96,7 @@ def do_search(query_term):
     cache = mc.get(key)
     if cache is None:
         states = uncached_state_facet_search()
+        print "uncached_state_facet_search:", states
         cache = {}
         for state in states:
             print state['term'], state['count']
