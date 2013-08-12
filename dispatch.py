@@ -92,12 +92,14 @@ def uncached_search(query_term):
 
 def do_search(query_term):
     key = 'openorgdata.states.numitems'
+    if app.debug:
+        mc.delete(key)
     cache = mc.get(key)
     if cache is None:
         result = uncached_state_facet_search()
         cache = {}
         for state in result['states']['terms']:
-            print state
+            print state['term'], state['count']
             cache[state['term']] = state['count']
         mc.set('openorgdata.states.numitems', cache)
     result = uncached_search(query_term)
