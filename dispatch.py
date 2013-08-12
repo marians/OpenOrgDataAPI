@@ -18,7 +18,7 @@ es = pyes.ES('127.0.0.1:9200')
 es.default_indices = ['orgdata']
 
 mc = memcache.Client(['127.0.0.1:11211'], debug=0)
-cache_prefill()
+
 
 state_ids = {
     'Baden-Württemberg': 'bw',
@@ -38,17 +38,6 @@ state_ids = {
     'Schleswig-Holstein': 'sh',
     'Thüringen': 'th'
 }
-
-
-def cache_prefill():
-    """Loads frequently used data into cache"""
-    key = 'openorgdata.states.numitems'
-    if mc.get(key) is None:
-        result = do_search('*')
-        cache = {}
-        for state in result['facets']['states']['terms']:
-            cache[state['term']] = state['count']
-        mc.set('openorgdata.states.numitems', cache)
 
 
 def add_response_headers(headers={}):
@@ -79,6 +68,13 @@ def expires(f):
 
 
 def do_search(query_term):
+    key = 'openorgdata.states.numitems'
+    if mc.get(key) is None:
+        result = do_search('*')
+        cache = {}
+        for state in result['facets']['states']['terms']:
+            cache[state['term']] = state['count']
+        mc.set('openorgdata.states.numitems', cache)
     query = pyes.TermQuery('name', query_term)
     query = query.search()
     query.facet.add_term_facet(field='state', name='states', size=20)
