@@ -92,8 +92,7 @@ def uncached_search(query_term):
 
 def do_search(query_term):
     key = 'openorgdata.states.numitems'
-    if app.debug:
-        mc.delete(key)
+    mc.delete(key)
     cache = mc.get(key)
     if cache is None:
         states = uncached_state_facet_search()
