@@ -21,6 +21,7 @@ def home():
 def hello_world():
     q = request.args.get('q', '')
     query = pyes.TermQuery('name', q)
+    query = query.search()
     query.facet.add_term_facet('states', field='state', size=20)
     query.facet.add_term_facet('nameterms', field='name', size=50, order='count')
     resultset = es.search(query=query)
