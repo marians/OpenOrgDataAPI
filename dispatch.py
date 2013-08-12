@@ -72,7 +72,7 @@ def uncached_state_facet_search():
     query = query.search()
     query.facet.add_term_facet(field='state', name='states', size=20)
     resultset = es.search(query=query)
-    return resultset.facets
+    return resultset.facets['states']['terms']
 
 
 def uncached_search(query_term):
@@ -96,9 +96,9 @@ def do_search(query_term):
         mc.delete(key)
     cache = mc.get(key)
     if cache is None:
-        result = uncached_state_facet_search()
+        states = uncached_state_facet_search()
         cache = {}
-        for state in result['states']['terms']:
+        for state in states:
             print state['term'], state['count']
             cache[state['term']] = state['count']
         mc.set('openorgdata.states.numitems', cache)
