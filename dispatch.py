@@ -67,14 +67,15 @@ def expires(f):
     return decorated_function
 
 
-def do_search(query_term):
-    key = 'openorgdata.states.numitems'
-    if mc.get(key) is None:
-        result = do_search('*')
-        cache = {}
-        for state in result['facets']['states']['terms']:
-            cache[state['term']] = state['count']
-        mc.set('openorgdata.states.numitems', cache)
+def uncached_state_facet_search():
+    query = pyes.TermQuery('name', '*')
+    query = query.search()
+    query.facet.add_term_facet(field='state', name='states', size=20)
+    resultset = es.search(query=query)
+    return resultset.facets
+
+
+def uncached_search(query_term):
     query = pyes.TermQuery('name', query_term)
     query = query.search()
     query.facet.add_term_facet(field='state', name='states', size=20)
@@ -86,6 +87,26 @@ def do_search(query_term):
         'hits': resultset.total,
         'facets': resultset.facets
     }
+    return result
+
+
+def do_search(query_term):
+    key = 'openorgdata.states.numitems'
+    cache = None
+    if mc.get(key) is None:
+        result = uncached_state_facet_search()
+        cache = {}
+        for state in result['states']['terms']:
+            cache[state['term']] = state['count']
+        mc.set('openorgdata.states.numitems', cache)
+    result = uncached_search(query_term)
+    # merge with cache
+    for n in range(len(result['facets']['states']['terms'])):
+        result['facets']['states']['terms'][n]['all'] = cache[result['facets']['states']['terms']['term']]
+        result['facets']['states']['terms'][n]['state_id'] = state_ids[result['facets']['states']['terms']['term']]
+        result['facets']['states']['terms'][n]['density'] = (
+            result['facets']['states']['terms'][n]['count'] /
+            float(cache[result['facets']['states']['terms']['term']]))
     return result
 
 
