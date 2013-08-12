@@ -8,6 +8,8 @@ import json
 import time
 from datetime import datetime
 from functools import wraps
+import memcache
+import pickle
 
 app = Flask(__name__)
 app.debug = True
@@ -15,6 +17,8 @@ app.debug = True
 es = pyes.ES('127.0.0.1:9200')
 es.default_indices = ['orgdata']
 
+mc = memcache.Client(['127.0.0.1:11211'], debug=0)
+cache_prefill()
 
 state_ids = {
     'Baden-Württemberg': 'bw',
@@ -34,6 +38,17 @@ state_ids = {
     'Schleswig-Holstein': 'sh',
     'Thüringen': 'th'
 }
+
+
+def cache_prefill():
+    """Loads frequently used data into cache"""
+    key = 'openorgdata.states.numitems'
+    if mc.get(key) is None:
+        result = do_search('*')
+        cache = {}
+        for state in result['facets']['states']['terms']:
+            cache[state['term']] = state['count']
+        mc.set('openorgdata.states.numitems', cache)
 
 
 def add_response_headers(headers={}):
@@ -78,20 +93,12 @@ def do_search(query_term):
     return result
 
 
-@app.route('/')
-def home():
-    return 'Hallo Home!'
-
-
 @app.route('/api/')
 @expires
 @add_response_headers({'Content-type': 'application/json'})
 def hello_world():
     q = request.args.get('q', '*')
     result = do_search(q)
-
-    # TODO: mime type
-    # TODO: expires header
     return json.dumps(result, indent=2)
 
 
