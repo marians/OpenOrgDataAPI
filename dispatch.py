@@ -116,8 +116,12 @@ def do_search(query_term):
 @add_response_headers({'Content-type': 'application/json'})
 def hello_world():
     q = request.args.get('q', '*')
+    callback = request.args.get('callback', '')
     result = do_search(q)
-    return json.dumps(result, indent=2)
+    out = json.dumps(result)
+    if callback != '':
+        out = callback + '(' + out + ')'
+    return out
 
 
 if __name__ == '__main__':
