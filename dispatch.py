@@ -52,7 +52,9 @@ def add_response_headers(headers={}):
 
 def expires(f):
     """This decorator passes far future expires header"""
-    threedays = datetime.fromtimestamp(time.now() + (60 * 60 * 24 * 3))
+    timestamp = int(time.time())
+    timestamp += (60 * 60 * 24 * 3)
+    threedays = datetime.fromtimestamp(timestamp)
     datestring = threedays.strftime('%a, %d %m %Y %H:%M:%S GMT')
     @wraps(f)
     @add_response_headers({'Expires': datestring})
