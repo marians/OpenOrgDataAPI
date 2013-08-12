@@ -25,7 +25,10 @@ def hello_world():
     query.facet.add_term_facet(field='state', name='states', size=20)
     query.facet.add_term_facet(field='name', name='nameterms', size=50, order='count')
     resultset = es.search(query=query)
-    return 'Hallo %s' % json.dumps(resultset.facets.nameterms.terms)
+    return 'Hallo <br> <code>%s</code> <br> <code>%s</code>' % (
+        json.dumps(resultset.facets.nameterms),
+        json.dumps(resultset.facets.states)
+    )
 
 
 if __name__ == '__main__':
