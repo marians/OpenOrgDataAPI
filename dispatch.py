@@ -124,7 +124,7 @@ def hello_world():
     q = request.args.get('q', '*')
     callback = request.args.get('callback', '')
     result = do_search(q)
-    out = json.dumps(result)
+    out = json.dumps(result, sort_keys=True)
     if callback != '':
         out = callback + '(' + out + ')'
     return out
