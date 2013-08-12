@@ -76,7 +76,7 @@ def uncached_state_facet_search():
 
 
 def uncached_search(query_term):
-    query = pyes.TermQuery('name', query_term)
+    query = pyes.WildcardQuery('name', query_term)
     query = query.search()
     query.facet.add_term_facet(field='state', name='states', size=20)
     query.facet.add_term_facet(field='name', name='nameterms', size=50, order='count')
